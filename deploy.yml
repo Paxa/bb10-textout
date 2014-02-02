@@ -1,0 +1,9 @@
+app:
+  bar_file: TextOut.bar
+
+device:
+  ip: 169.254.0.1
+  password: qwerty
+
+token:
+  path: ~/Dropbox/bb10/blackberry-pashdebugtoken.bar
