@@ -1,0 +1,6 @@
+build/CMakeFiles
+build/Makefile
+build/CMakeCache.txt
+build/TextOut*
+build/cmake_install.cmake
+build/moc_textoutapp.cpp

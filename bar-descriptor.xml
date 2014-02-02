@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<qnx xmlns="http://www.qnx.com/schemas/application/1.0">
+
+    <id>com.example.textout</id>
+    <name>textout</name>
+    <versionNumber>1.0.1</versionNumber>
+
+    <buildId>1</buildId>
+
+    <description>TextOut application</description>
+
+    <author>pavel</author>
+    <authorId>gYAAgKtHcZb_j6SXg11FYH7aJy4</authorId>
+
+    <initialWindow>
+        <aspectRatio>portrait</aspectRatio>
+        <autoOrients>false</autoOrients>
+        <systemChrome>none</systemChrome>
+        <transparent>false</transparent>
+    </initialWindow>
+
+    <permission system="true">run_native</permission>
+</qnx>
