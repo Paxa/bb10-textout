@@ -8,11 +8,17 @@ require 'pp'
 def set_qnx_env
   return false if ENV['QNX_TARGET']
 
-  system(%{
-    export tmp_pwd=`pwd`
+  variables = %w[QNX_TARGET QNX_HOST QNX_CONFIGURATION MAKEFLAGS DYLD_LIBRARY_PATH PATH QDE CPUVARDIR]
+
+  data = %x{
+    tmp_pwd=`pwd`
     cd /Applications/Momentics.app && source bbndk-* && cd $tmp_pwd
-    unset tmp_pwd
-  })
+    #{variables.map {|v| "echo $#{v} "}.join(";")}
+  }
+
+  data.split("\n").each_with_index do |value, i|
+    ENV[ variables[i] ] = value
+  end
 end
 
 def symbolize(obj)
@@ -83,9 +89,9 @@ task :bar do
   app, device = DEPLOY_YML[:app], DEPLOY_YML[:device]
   token = Shellwords.escape(DEPLOY_YML[:token][:path]).sub(/^\\~/, '~')
 
-  cmd = "blackberry-nativepackager -package build/#{app[:bar_file]} bar-descriptor.xml -devMode -debugToken #{token}"
-  puts cmd
-  system cmd
+  system %{
+    blackberry-nativepackager -package build/#{app[:bar_file]} bar-descriptor.xml -devMode -debugToken #{token}
+  }
 end
 
 desc "Send .bar file to device"
@@ -110,4 +116,18 @@ desc "cook .bar and install to device (bar & install_app)"
 task :deploy do
   Rake::Task["bar"].invoke
   Rake::Task["install_app"].invoke
+end
+
+task :clean do
+  Dir.chdir("build") do
+    system %{
+      rm -rf CMakeCache.txt
+      rm -rf CMakeFiles
+      rm -rf cmake_install.cmake
+      rm -rf TextOut
+      rm -rf TextOut.bar
+      rm -rf TextOut_automoc.cpp
+      rm -rf moc_textoutapp.cpp
+    }
+  end
 end
