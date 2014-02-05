@@ -48,6 +48,31 @@ task :laodenv do
   set_qnx_env
 end
 
+task :get_mruby do
+  Dir.chdir("build") do
+    system %{
+      rm -rf mruby
+      git clone git@github.com:mruby/mruby.git
+    }
+  end
+end
+
+task :make_mruby do
+  set_qnx_env
+
+  Dir.chdir("build") do
+    system %{
+      cp build_config.rb mruby/build_config.rb
+      cd mruby && ruby ./minirake
+    }
+  end
+end
+
+task :mruby do
+  Rake::Task["get_mruby"].invoke
+  Rake::Task["make_mruby"].invoke
+end
+
 desc "Run cmake command to create Makefile"
 task :cmake do
   set_qnx_env
@@ -90,6 +115,9 @@ task :bar do
   token = Shellwords.escape(DEPLOY_YML[:token][:path]).sub(/^\\~/, '~')
 
   system %{
+    rm -rf ./assets
+    mkdir ./assets
+    cp build/mruby/build/blackberry/bin/* ./assets
     blackberry-nativepackager -package build/#{app[:bar_file]} bar-descriptor.xml -devMode -debugToken #{token}
   }
 end

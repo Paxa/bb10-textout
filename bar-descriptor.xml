@@ -24,6 +24,8 @@
        <asset path="build/TextOut" entry="true" type="Qnx/Elf">TextOut</asset>
     </configuration>
 
+    <asset path="assets">assets</asset>
+
     <env var="LD_LIBRARY_PATH" value="app/native/lib:/usr/lib/qt4/lib"/>
     <permission system="true">run_native</permission>
 </qnx>

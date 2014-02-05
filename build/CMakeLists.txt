@@ -12,11 +12,15 @@ set(CMAKE_AUTOMOC ON)
 
 find_package(BBCascades REQUIRED)
 
+set(MRUBY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/mruby)
+set(MRUBY_BUILD ${CMAKE_CURRENT_SOURCE_DIR}/mruby/build/blackberry)
+
 include_directories(
     ${PROJECT_SOURCE_DIR}
     /Applications/Momentics.app/target_10_2_0_1155/qnx6/usr/include/freetype2
+    ${MRUBY_DIR}/include
     ${QT_INCLUDES}
-    ${CMAKE_CURRENT_BINARY_DIR} 
+    ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
@@ -26,19 +30,23 @@ set(TextOut_SRCS
     ../src/textoutapp.cpp
 )
 
-execute_process(COMMAND rm -rf Device-Debug; mkdir Device-Debug)
+#execute_process(COMMAND rm -rf Device-Debug; mkdir Device-Debug)
 
 add_executable(TextOut ${TextOut_SRCS})
+
+message(STATUS ${MRUBY_DIR})
 
 target_link_libraries(
     TextOut
 
+    m
     freetype
     ${QT_QTCORE_LIBRARY}
     ${QT_QTNETWORK_LIBRARY}
     ${QT_QTXML_LIBRARY}
     ${QT_QTGUI_LIBRARY}
     ${QT_QTDECLARATIVE_LIBRARY}
-
+    ${MRUBY_BUILD}/lib/libmruby.a
+    ${MRUBY_BUILD}/lib/libmruby_core.a
     ${BBCASCADES_LIBRARY}
 )

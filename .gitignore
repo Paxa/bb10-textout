@@ -4,3 +4,9 @@ build/TextOut*
 build/Makefile
 build/cmake_install.cmake
 build/moc_textoutapp.cpp
+build/mruby
+
+assets/mruby
+assets/mirb
+assets/mrbc
+assets/.assets.index
