@@ -130,8 +130,21 @@ task :install_app do
   app, device, toekn = DEPLOY_YML[:app], DEPLOY_YML[:device], DEPLOY_YML[:token]
 
   system %{
-    blackberry-deploy -installApp #{device[:ip]} -password #{device[:password]} build/#{app[:bar_file]}
+    blackberry-deploy -installApp -launchApp #{device[:ip]} -password #{device[:password]} build/#{app[:bar_file]}
   }
+end
+
+task :see_log do
+  set_qnx_env
+  load_deploy_yml
+
+  app, device, toekn = DEPLOY_YML[:app], DEPLOY_YML[:device], DEPLOY_YML[:token]
+
+  %x{
+    blackberry-deploy -getFile logs/log "/tmp/bb_log" #{device[:ip]} -password #{device[:password]} build/#{app[:bar_file]}
+  }
+
+  puts File.read("/tmp/bb_log")
 end
 
 desc "compile app (cmake & make)"
@@ -146,6 +159,7 @@ task :deploy do
   Rake::Task["install_app"].invoke
 end
 
+desc "Delete build files"
 task :clean do
   Dir.chdir("build") do
     system %{
@@ -158,4 +172,10 @@ task :clean do
       rm -rf moc_textoutapp.cpp
     }
   end
+end
+
+task :default do
+  Rake::Task["mruby"].invoke
+  Rake::Task["build"].invoke
+  Rake::Task["deploy"].invoke
 end
