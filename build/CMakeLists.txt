@@ -28,6 +28,8 @@ set(TextOut_SRCS
     ../src/main.cpp
     ../src/textoutapp.h
     ../src/textoutapp.cpp
+    ../src/mruby_runner.h
+    ../src/mruby_runner.cpp
 )
 
 #execute_process(COMMAND rm -rf Device-Debug; mkdir Device-Debug)

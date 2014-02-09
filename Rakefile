@@ -48,6 +48,7 @@ task :laodenv do
   set_qnx_env
 end
 
+desc "Clone latest mruby to build/mruby"
 task :get_mruby do
   Dir.chdir("build") do
     system %{
@@ -57,6 +58,7 @@ task :get_mruby do
   end
 end
 
+desc "Compile ruby for blackberry platform"
 task :make_mruby do
   set_qnx_env
 
@@ -68,6 +70,7 @@ task :make_mruby do
   end
 end
 
+desc "Download and compile ruby"
 task :mruby do
   Rake::Task["get_mruby"].invoke
   Rake::Task["make_mruby"].invoke
@@ -134,17 +137,30 @@ task :install_app do
   }
 end
 
+desc "Shows <app>/logs/log file"
 task :see_log do
   set_qnx_env
   load_deploy_yml
 
-  app, device, toekn = DEPLOY_YML[:app], DEPLOY_YML[:device], DEPLOY_YML[:token]
+  app, device = DEPLOY_YML[:app], DEPLOY_YML[:device]
 
   %x{
     blackberry-deploy -getFile logs/log "/tmp/bb_log" #{device[:ip]} -password #{device[:password]} build/#{app[:bar_file]}
   }
 
   puts File.read("/tmp/bb_log")
+end
+
+desc "Initialize ssh server"
+task :ssh do
+  set_qnx_env
+  load_deploy_yml
+
+  device = DEPLOY_YML[:device]
+
+  system %{
+    blackberry-connect #{device[:ip]} -password qwerty -sshPublicKey ~/.ssh/bb10/id_rsa.pub
+  }
 end
 
 desc "compile app (cmake & make)"
